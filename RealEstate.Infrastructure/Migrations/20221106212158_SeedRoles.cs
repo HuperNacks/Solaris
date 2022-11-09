@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace RealEstate.Migrations
+namespace RealEstate.Infrastructure.Migrations
 {
     public partial class SeedRoles : Migration
     {

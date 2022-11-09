@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using RealEstate.Areas.Identity.Data;
+using RealEstate.Core.Entities;
 using RealEstate.Extensions;
+using RealEstate.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,7 +52,7 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(
       name: "edit",
-      pattern: "Admin/{action=Edit}/{id?}",
+      pattern: "Admin/{action=Index}",
       defaults: new {controller = "Admin" , area = "Admin"}
     );
     endpoints.MapControllerRoute(

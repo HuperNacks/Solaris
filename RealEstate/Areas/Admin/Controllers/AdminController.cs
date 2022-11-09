@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using RealEstate.Areas.Admin.Models;
-using RealEstate.Areas.Identity.Data;
-using RealEstate.Core;
-using RealEstate.Core.Repositories.IRepositories;
+using RealEstate.Core.Entities;
+using RealEstate.Service.Services.Interfaces;
 using System.Data;
+
 
 
 
@@ -16,18 +16,20 @@ namespace RealEstate.Areas.Admin.Controllers
     [Authorize(Roles = $"{Constants.Roles.Master},{Constants.Roles.Admin}")]
     public class AdminController : Controller
     {
-
-        private readonly IUnitOfWork _unitOfWork;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        public AdminController(IUnitOfWork unitOfWork, SignInManager<ApplicationUser> signInManager)
+        private readonly IUserServices _userServices;
+        private readonly IRoleServices _roleServices;
+        public AdminController(SignInManager<ApplicationUser> signInManager, IUserServices userServices, IRoleServices roleServices)
         {
-            _unitOfWork = unitOfWork;
             _signInManager = signInManager;
+            _userServices = userServices;
+            _roleServices = roleServices;
         }
-        
+
+
         public IActionResult Index()
         {
-            var users = _unitOfWork.User.GetUsers();
+            var users = _userServices.GetUsers();
 
             return View(users);
         }
@@ -37,9 +39,9 @@ namespace RealEstate.Areas.Admin.Controllers
         [Authorize(Policy = Constants.Policies.RequireMaster)]
         public async Task<IActionResult> Edit(string id)
         {
-            var user = _unitOfWork.User.GetUser(id);
-            var roles = _unitOfWork.Role.GetRoles();
-
+            var user = _userServices.GetUser(id);
+            var roles = _roleServices.GetRoles();
+          
             var userRoles = await _signInManager.UserManager.GetRolesAsync(user);
 
             var roleItems = roles.Select(role =>
@@ -51,7 +53,10 @@ namespace RealEstate.Areas.Admin.Controllers
 
             var userModel = new EditAdminViewModel
             {
-                User = user,
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
                 Roles = roleItems,
 
             };
@@ -62,7 +67,9 @@ namespace RealEstate.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> OnPostAsync(EditAdminViewModel data)
         {
-            var user = _unitOfWork.User.GetUser(data.User.Id);
+
+           var user = _userServices.GetUser(data.Id);
+           
 
             if (user == null)
             {
@@ -112,12 +119,13 @@ namespace RealEstate.Areas.Admin.Controllers
                 await _signInManager.UserManager.RemoveFromRolesAsync(user, rolesToDelete);
             }
 
-            user.FirstName = data.User.FirstName;
-            user.LastName = data.User.LastName;
-            user.Email = data.User.Email;
+            user.FirstName = data.FirstName;
+            user.LastName = data.LastName;
+            user.Email = data.Email;
+            user.NormalizedEmail = data.Email.ToUpper();
 
 
-            _unitOfWork.User.UpdateUser(user);
+            _userServices.UpdateUser(user);
 
             return RedirectToAction("Edit", new { id = user.Id });
         }

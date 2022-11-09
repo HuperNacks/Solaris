@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using RealEstate.Core;
+﻿using Microsoft.AspNetCore.Mvc;
 using RealEstate.Models;
-using System.Data;
 using System.Diagnostics;
 
 namespace RealEstate.Controllers

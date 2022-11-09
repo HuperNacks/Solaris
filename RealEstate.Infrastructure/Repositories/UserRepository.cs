@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
-using RealEstate.Areas.Identity.Data;
-using RealEstate.Core.Repositories.IRepositories;
+﻿using RealEstate.Infrastructure.Data;
+using RealEstate.Core.Interfaces;
+using RealEstate.Core.Entities;
 
-namespace RealEstate.Core.Repositories
+namespace RealEstate.Infrastructure.Repositories
 {
     public class UserRepository : IUserRepository
     {

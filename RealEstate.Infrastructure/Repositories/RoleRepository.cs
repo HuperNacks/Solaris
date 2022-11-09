@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using RealEstate.Areas.Identity.Data;
-using RealEstate.Core.Repositories.IRepositories;
+using RealEstate.Infrastructure.Data;
+using RealEstate.Core.Interfaces;
 
-namespace RealEstate.Core.Repositories
+
+namespace RealEstate.Infrastructure.Repositories
 {
     public class RoleRepository : IRoleRepository
     {

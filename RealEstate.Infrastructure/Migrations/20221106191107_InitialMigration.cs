@@ -1,9 +1,8 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace RealEstate.Migrations
+namespace RealEstate.Infrastructure.Migrations
 {
     public partial class InitialMigration : Migration
     {

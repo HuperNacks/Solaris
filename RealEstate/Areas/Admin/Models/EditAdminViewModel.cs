@@ -1,12 +1,20 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using RealEstate.Areas.Identity.Data;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 
 namespace RealEstate.Areas.Admin.Models
 {
     public class EditAdminViewModel
     {
-        public ApplicationUser User { get; set; }
+        
+        public string Id { get; set; }
+        [Required]
+        public string FirstName { get; set; }
+        [Required]
+        public string LastName { get; set; }
+        [EmailAddress]
+        [Required]
+        public string Email { get; set; }
         public IList<SelectListItem> Roles { get; set; }
+
     }
 }

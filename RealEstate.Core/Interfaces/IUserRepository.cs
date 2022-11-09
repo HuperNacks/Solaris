@@ -1,6 +1,8 @@
-﻿using RealEstate.Areas.Identity.Data;
+﻿
 
-namespace RealEstate.Core.Repositories.IRepositories
+using RealEstate.Core.Entities;
+
+namespace RealEstate.Core.Interfaces
 {
     public interface IUserRepository
     {
@@ -9,5 +11,7 @@ namespace RealEstate.Core.Repositories.IRepositories
         ApplicationUser GetUser(string id);
 
         ApplicationUser UpdateUser(ApplicationUser user);
+
+
     }
 }

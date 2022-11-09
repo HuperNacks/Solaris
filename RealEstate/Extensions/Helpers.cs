@@ -1,7 +1,8 @@
-﻿
-using RealEstate.Core;
-using RealEstate.Core.Repositories;
-using RealEstate.Core.Repositories.IRepositories;
+﻿using RealEstate.Core.Entities;
+using RealEstate.Core.Interfaces;
+using RealEstate.Infrastructure.Repositories;
+using RealEstate.Service.Services;
+using RealEstate.Service.Services.Interfaces;
 
 namespace RealEstate.Extensions
 {
@@ -19,8 +20,9 @@ namespace RealEstate.Extensions
         public static void AddScoped(this IServiceCollection services)
         {
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<IUserServices, UserServices>();
+            services.AddScoped<IRoleServices, RoleServices>();
         }
     }
 }
