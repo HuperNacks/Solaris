@@ -6,15 +6,19 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using RealEstate.Core.Entities;
+using static RealEstate.Core.Entities.Constants;
 
 namespace RealEstate.Areas.Identity.Pages.Account
 {
+    [Area("Admin")]
+    [Authorize(Roles = $"{Roles.Master}")]
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;

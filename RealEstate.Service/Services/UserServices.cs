@@ -13,33 +13,34 @@ namespace RealEstate.Service.Services
             _userRepository = userRepository;
         }
 
-        public ApplicationUser UpdateUser(ApplicationUser user)
+        public async Task<ApplicationUser> UpdateUser(ApplicationUser user)
         {
-            return _userRepository.UpdateUser(user);
+            return await _userRepository.UpdateUser(user);
 
         }
 
-        public ApplicationUser GetUser(string id)
+        public async Task<ApplicationUser> GetUser(string id)
         {
-            return _userRepository.GetUser(id);
+            return await _userRepository.GetUser(id);
         }
 
-        public ICollection<ApplicationUser> GetUsers()
+        public async Task<ICollection<ApplicationUser>> GetUsers()
         {
-            return _userRepository.GetUsers();
+            return await _userRepository.GetUsers();
         }
 
-        public ApplicationUser DeleteUser(ApplicationUser user)
+        public async Task<ApplicationUser> DeleteUser(string id)
         {
+            var user = await _userRepository.GetUser(id);
             user.LockoutEnabled = true;
             user.LockoutEnd = DateTime.MaxValue;
-            return _userRepository.UpdateUser(user);
+            return await _userRepository.UpdateUser(user);
         }
 
-        public ApplicationUser RecoverUser(ApplicationUser user)
+        public async Task<ApplicationUser> RecoverUser(ApplicationUser user)
         {
             user.LockoutEnabled=false;
-            return _userRepository.UpdateUser(user);
+            return await _userRepository.UpdateUser(user);
         }
     }
 }

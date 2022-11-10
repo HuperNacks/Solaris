@@ -1,6 +1,7 @@
 ﻿using RealEstate.Infrastructure.Data;
 using RealEstate.Core.Interfaces;
 using RealEstate.Core.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace RealEstate.Infrastructure.Repositories
 {
@@ -12,20 +13,20 @@ namespace RealEstate.Infrastructure.Repositories
             _context = context;
         }
 
-        public ApplicationUser GetUser(string id)
+        public async Task<ApplicationUser> GetUser(string id)
         {
-            return _context.Users.FirstOrDefault(u => u.Id == id);
+            return await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
         }
 
-        public ICollection<ApplicationUser> GetUsers()
+        public async Task<ICollection<ApplicationUser>>GetUsers()
         {
-            return _context.Users.ToList();
+            return await _context.Users.ToListAsync();
         }
 
-        public ApplicationUser UpdateUser(ApplicationUser user)
+        public async Task<ApplicationUser> UpdateUser(ApplicationUser user)
         { 
             _context.Update(user);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return user;
         }

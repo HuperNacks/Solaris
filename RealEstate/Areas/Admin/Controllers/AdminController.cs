@@ -27,28 +27,28 @@ namespace RealEstate.Areas.Admin.Controllers
         }
 
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
 
           
-            var users = _userServices.GetUsers();
+            var users = await _userServices.GetUsers();
 
             return View(users);
         }
 
-        public IActionResult SoftDeleteUser(string id)
+        public async Task<IActionResult> SoftDeleteUser(string id)
         {
 
-            var user = _userServices.GetUser(id);
-            _userServices.DeleteUser(user);
+            
+            await _userServices.DeleteUser(id);
 
             return RedirectToAction("Index", "Admin");
         }
 
-        public  IActionResult RecoverUser(string id)
+        public async Task<IActionResult> RecoverUser(string id)
         {
-            var user = _userServices.GetUser(id);
-            _userServices.RecoverUser(user);
+            var user = await _userServices.GetUser(id);
+            await _userServices.RecoverUser(user);
 
             return RedirectToAction("Index", "Admin");
         }
@@ -57,8 +57,8 @@ namespace RealEstate.Areas.Admin.Controllers
         [Authorize(Policy = Constants.Policies.RequireMaster)]
         public async Task<IActionResult> Edit(string id)
         {
-            var user = _userServices.GetUser(id);
-            var roles = _roleServices.GetRoles();
+            var user = await _userServices.GetUser(id);
+            var roles = await _roleServices.GetRoles();
 
             var userRoles = await _signInManager.UserManager.GetRolesAsync(user);
 
@@ -85,7 +85,7 @@ namespace RealEstate.Areas.Admin.Controllers
         public async Task<IActionResult> Edit(EditAdminViewModel data)
         {
 
-           var user = _userServices.GetUser(data.Id);
+           var user = await _userServices.GetUser(data.Id);
            
 
 
@@ -151,7 +151,7 @@ namespace RealEstate.Areas.Admin.Controllers
                 }
 
 
-                _userServices.UpdateUser(user);
+                await _userServices.UpdateUser(user);
 
             }
 

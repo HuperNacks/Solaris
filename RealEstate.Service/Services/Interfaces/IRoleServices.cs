@@ -4,6 +4,6 @@ namespace RealEstate.Service.Services.Interfaces
 {
     public interface IRoleServices
     {
-        ICollection<IdentityRole> GetRoles();
+        Task<ICollection<IdentityRole>> GetRoles();
     }
 }

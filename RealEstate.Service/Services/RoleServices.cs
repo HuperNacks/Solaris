@@ -10,12 +10,12 @@ namespace RealEstate.Service.Services
 
         public RoleServices(IRoleRepository roleServices)
         {
-            _roleServices = roleServices;
+             _roleServices = roleServices;
         }
 
-        public ICollection<IdentityRole> GetRoles()
+        public async Task<ICollection<IdentityRole>> GetRoles()
         {
-            return _roleServices.GetRoles();
+            return await _roleServices.GetRoles();
         }
     }
 }

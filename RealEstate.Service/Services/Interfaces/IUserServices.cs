@@ -4,14 +4,14 @@ namespace RealEstate.Service.Services.Interfaces
 {
     public interface IUserServices
     {
-        ApplicationUser GetUser(string id);
+        Task<ApplicationUser> GetUser(string id);
 
-        ICollection<ApplicationUser> GetUsers();
-        ApplicationUser UpdateUser(ApplicationUser user);
+        Task<ICollection<ApplicationUser>> GetUsers();
+        Task<ApplicationUser> UpdateUser(ApplicationUser user);
 
-        ApplicationUser DeleteUser(ApplicationUser user);
+        Task<ApplicationUser> DeleteUser(string id);
 
-        ApplicationUser RecoverUser(ApplicationUser user);
+        Task<ApplicationUser> RecoverUser(ApplicationUser user);
 
 
     }

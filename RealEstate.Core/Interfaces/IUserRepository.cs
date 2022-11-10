@@ -6,11 +6,11 @@ namespace RealEstate.Core.Interfaces
 {
     public interface IUserRepository
     {
-        ICollection<ApplicationUser> GetUsers();
+        Task<ICollection<ApplicationUser>>GetUsers();
 
-        ApplicationUser GetUser(string id);
+        Task<ApplicationUser> GetUser(string id);
 
-        ApplicationUser UpdateUser(ApplicationUser user);
+        Task<ApplicationUser> UpdateUser(ApplicationUser user);
 
 
     }

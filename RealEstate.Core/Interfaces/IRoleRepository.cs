@@ -5,6 +5,6 @@ namespace RealEstate.Core.Interfaces
 {
     public interface IRoleRepository
     {
-        ICollection<IdentityRole> GetRoles();
+        Task<ICollection<IdentityRole>> GetRoles();
     }
 }

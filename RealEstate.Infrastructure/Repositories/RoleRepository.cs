@@ -12,7 +12,7 @@ namespace RealEstate.Infrastructure.Repositories
         {
             _context = context;
         }
-        public ICollection<IdentityRole>GetRoles()
+        public async Task<ICollection<IdentityRole>>GetRoles()
         {
             return _context.Roles.ToList();
         }
