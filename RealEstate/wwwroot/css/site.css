@@ -25,4 +25,14 @@ body {
     cursor: pointer; /* Mouse pointer on hover */
     color: inherit;
 }
+.row{
+    display: flex;
+    justify-content: center;
+}
  /* Darker background on mouse-over */
+.user-locked{
+    color: red;
+ }
+.user-active{
+    color: green;
+}

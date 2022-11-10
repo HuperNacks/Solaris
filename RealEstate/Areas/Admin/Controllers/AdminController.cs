@@ -29,11 +29,29 @@ namespace RealEstate.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
+
+          
             var users = _userServices.GetUsers();
 
             return View(users);
         }
 
+        public IActionResult SoftDeleteUser(string id)
+        {
+
+            var user = _userServices.GetUser(id);
+            _userServices.DeleteUser(user);
+
+            return RedirectToAction("Index", "Admin");
+        }
+
+        public  IActionResult RecoverUser(string id)
+        {
+            var user = _userServices.GetUser(id);
+            _userServices.RecoverUser(user);
+
+            return RedirectToAction("Index", "Admin");
+        }
         
         
         [Authorize(Policy = Constants.Policies.RequireMaster)]
@@ -41,7 +59,7 @@ namespace RealEstate.Areas.Admin.Controllers
         {
             var user = _userServices.GetUser(id);
             var roles = _roleServices.GetRoles();
-          
+
             var userRoles = await _signInManager.UserManager.GetRolesAsync(user);
 
             var roleItems = roles.Select(role =>
@@ -58,76 +76,88 @@ namespace RealEstate.Areas.Admin.Controllers
                 LastName = user.LastName,
                 Email = user.Email,
                 Roles = roleItems,
-
             };
 
             return View(userModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> OnPostAsync(EditAdminViewModel data)
+        public async Task<IActionResult> Edit(EditAdminViewModel data)
         {
 
            var user = _userServices.GetUser(data.Id);
            
+
 
             if (user == null)
             {
                 return NotFound();
             }
 
-            var userRolesInDb = await _signInManager.UserManager.GetRolesAsync(user);
-
-
-            var rolesToAdd = new List<string>();
-            var rolesToDelete = new List<string>();
-
-
-            foreach (var role in data.Roles)
+            if (ModelState.IsValid)
             {
-                var assignedInDb = userRolesInDb.FirstOrDefault(ur => ur == role.Text);
-                if (role.Selected)
+                var userRolesInDb = await _signInManager.UserManager.GetRolesAsync(user);
+
+
+                var rolesToAdd = new List<string>();
+                var rolesToDelete = new List<string>();
+
+                var passwordHasher = new PasswordHasher<ApplicationUser>();
+
+                foreach (var role in data.Roles)
                 {
-                    if (assignedInDb == null)
+                    var assignedInDb = userRolesInDb.FirstOrDefault(ur => ur == role.Text);
+                    if (role.Selected)
                     {
+                        if (assignedInDb == null)
+                        {
 
-                        //await _signInManager.UserManager.AddToRoleAsync(user, role.Text);
-                        //Add role
-                        rolesToAdd.Add(role.Text);
+                            //await _signInManager.UserManager.AddToRoleAsync(user, role.Text);
+                            //Add role
+                            rolesToAdd.Add(role.Text);
 
+                        }
+                    }
+                    else
+                    {
+                        if (assignedInDb != null)
+                        {
+                            //Remove Role
+                            rolesToDelete.Add(role.Text);
+
+                            //await _signInManager.UserManager.RemoveFromRoleAsync(user, role.Text);
+                        }
                     }
                 }
-                else
+
+                if (rolesToAdd.Any())
                 {
-                    if (assignedInDb != null)
-                    {
-                        //Remove Role
-                        rolesToDelete.Add(role.Text);
+                    await _signInManager.UserManager.AddToRolesAsync(user, rolesToAdd);
 
-                        //await _signInManager.UserManager.RemoveFromRoleAsync(user, role.Text);
-                    }
                 }
+
+                if (rolesToDelete.Any())
+                {
+                    await _signInManager.UserManager.RemoveFromRolesAsync(user, rolesToDelete);
+                }
+
+                user.FirstName = data.FirstName;
+                user.LastName = data.LastName;
+                user.Email = data.Email;
+                user.NormalizedEmail = data.Email.ToUpper();
+                if (!String.IsNullOrWhiteSpace(data.Password))
+                {
+                    user.PasswordHash = passwordHasher.HashPassword(user, data.Password);
+                }
+
+
+                _userServices.UpdateUser(user);
+
             }
 
-            if (rolesToAdd.Any())
-            {
-                await _signInManager.UserManager.AddToRolesAsync(user, rolesToAdd);
-            }
+            //return RedirectToAction("Edit", new { id = user.Id });
+            return View(data);
 
-            if (rolesToDelete.Any())
-            {
-                await _signInManager.UserManager.RemoveFromRolesAsync(user, rolesToDelete);
-            }
-
-            user.FirstName = data.FirstName;
-            user.LastName = data.LastName;
-            user.Email = data.Email;
-            user.NormalizedEmail = data.Email.ToUpper();
-
-
-            _userServices.UpdateUser(user);
-
-            return RedirectToAction("Edit", new { id = user.Id });
         }
     }
 }

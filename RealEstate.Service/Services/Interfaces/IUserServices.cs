@@ -9,6 +9,10 @@ namespace RealEstate.Service.Services.Interfaces
         ICollection<ApplicationUser> GetUsers();
         ApplicationUser UpdateUser(ApplicationUser user);
 
+        ApplicationUser DeleteUser(ApplicationUser user);
+
+        ApplicationUser RecoverUser(ApplicationUser user);
+
 
     }
 }

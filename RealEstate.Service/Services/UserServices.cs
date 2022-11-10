@@ -28,5 +28,18 @@ namespace RealEstate.Service.Services
         {
             return _userRepository.GetUsers();
         }
+
+        public ApplicationUser DeleteUser(ApplicationUser user)
+        {
+            user.LockoutEnabled = true;
+            user.LockoutEnd = DateTime.MaxValue;
+            return _userRepository.UpdateUser(user);
+        }
+
+        public ApplicationUser RecoverUser(ApplicationUser user)
+        {
+            user.LockoutEnabled=false;
+            return _userRepository.UpdateUser(user);
+        }
     }
 }

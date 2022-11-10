@@ -1,5 +1,9 @@
 ﻿
+@using Microsoft.AspNetCore.Identity
 @using RealEstate.Core.Entities
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
 @{
     ViewData["Title"] = "Admin Manager Page ";
@@ -22,6 +26,7 @@
                     <th scope="col">Last</th>
                     <th scope="col">Email</th>
                     <th scope="col">Edit</th>
+                    <th scope="col">Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,6 +38,19 @@
                         <td>@user.Email</td>
                         <td>
                             <a asp-area="Admin" asp-controller="Admin" asp-action="Edit" asp-route-id="@user.Id">Edit</a>
+                            <a asp-area="Admin" asp-controller="Admin" asp-action="SoftDeleteUser" asp-route-id="@user.Id">Delete</a>
+                            <a asp-area="Admin" asp-controller="Admin" asp-action="RecoverUser" asp-route-id="@user.Id">Recover</a>
+                        </td>
+                        <td>
+                            @if (await SignInManager.UserManager.IsLockedOutAsync(user))
+                            {
+
+                                <label><span class="user-locked">●</span>User is locked</label>
+                            }
+                            else
+                            {
+                                <label><span class="user-active">●</span>User is active</label>
+                            }
                         </td>
                     </tr>
                 }
@@ -40,4 +58,6 @@
         </table>
     }
 </div>
+
+
 
