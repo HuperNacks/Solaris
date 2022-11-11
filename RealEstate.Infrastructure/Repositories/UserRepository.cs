@@ -2,6 +2,7 @@
 using RealEstate.Core.Interfaces;
 using RealEstate.Core.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace RealEstate.Infrastructure.Repositories
 {

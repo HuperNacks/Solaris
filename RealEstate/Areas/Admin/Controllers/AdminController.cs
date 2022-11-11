@@ -41,7 +41,7 @@ namespace RealEstate.Areas.Admin.Controllers
 
             
             await _userServices.DeleteUser(id);
-
+            
             return RedirectToAction("Index", "Admin");
         }
 
@@ -150,8 +150,10 @@ namespace RealEstate.Areas.Admin.Controllers
                     user.PasswordHash = passwordHasher.HashPassword(user, data.Password);
                 }
 
-
                 await _userServices.UpdateUser(user);
+                
+                
+                
 
             }
 

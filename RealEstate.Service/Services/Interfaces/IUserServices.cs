@@ -12,6 +12,7 @@ namespace RealEstate.Service.Services.Interfaces
         Task<ApplicationUser> DeleteUser(string id);
 
         Task<ApplicationUser> RecoverUser(ApplicationUser user);
+       
 
 
     }
