@@ -8,16 +8,16 @@ namespace RealEstate.Service.Services
     public class UserServices : IUserServices
     {
         private readonly IUserRepository _userRepository;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        public UserServices(IUserRepository userRepository, SignInManager<ApplicationUser> signInManager)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public UserServices(IUserRepository userRepository, UserManager<ApplicationUser> userManager)
         {
             _userRepository = userRepository;
-            _signInManager = signInManager;
+            _userManager = userManager;
         }
 
         public async Task<ApplicationUser> UpdateUser(ApplicationUser user)
         {
-            await _signInManager.UserManager.UpdateSecurityStampAsync(user);
+            await _userManager.UpdateSecurityStampAsync(user);
             return await _userRepository.UpdateUser(user);
 
         }
@@ -35,7 +35,7 @@ namespace RealEstate.Service.Services
         public async Task<ApplicationUser> DeleteUser(string id)
         {
             var user = await _userRepository.GetUser(id);
-            await _signInManager.UserManager.UpdateSecurityStampAsync(user);
+            await _userManager.UpdateSecurityStampAsync(user);
             user.LockoutEnabled = true;
             user.LockoutEnd = DateTime.MaxValue;
             return await _userRepository.UpdateUser(user);

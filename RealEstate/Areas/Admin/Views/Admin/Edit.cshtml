@@ -7,9 +7,10 @@
 
 
 @{
+    Layout = "_DashboardLayout";
 }
 
-<main>
+<div>
     <div class="py-5 text-center">
         <h2>Edit User</h2>
     </div>
@@ -72,20 +73,10 @@
                     </div>
                 }
                 </div>
-                @*
-                    @foreach (var role in Model.Roles)
-                    {
-                        <div class="form-check">
-                            <input id="@role.Value" name="paymentMethod" type="checkbox" class="form-check-input" checked="@role.Selected" required"">
-                            <label class="form-check-label" asp-for="@role.Value">@role.Text</label>
-                        </div>
-                    }        *@      
-                
-
                 <hr class="my-4">
 
                 <button class="w-100 btn btn-primary btn-lg" type="submit">Save</button>
                 </form>
         </div>
     </div>
-</main>
+</div>

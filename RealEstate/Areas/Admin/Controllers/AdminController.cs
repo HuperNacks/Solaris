@@ -16,32 +16,38 @@ namespace RealEstate.Areas.Admin.Controllers
     [Authorize(Roles = $"{Constants.Roles.Master},{Constants.Roles.Admin}")]
     public class AdminController : Controller
     {
-        private readonly SignInManager<ApplicationUser> _signInManager;
+
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserServices _userServices;
         private readonly IRoleServices _roleServices;
-        public AdminController(SignInManager<ApplicationUser> signInManager, IUserServices userServices, IRoleServices roleServices)
+        public AdminController(UserManager<ApplicationUser> userManager, IUserServices userServices, IRoleServices roleServices)
         {
-            _signInManager = signInManager;
+            _userManager = userManager;
             _userServices = userServices;
             _roleServices = roleServices;
         }
 
-
+        public IActionResult Dashboard()
+        {
+            return View();
+        }
         public async Task<IActionResult> Index()
         {
 
-          
+
             var users = await _userServices.GetUsers();
 
             return View(users);
         }
 
+
+
         public async Task<IActionResult> SoftDeleteUser(string id)
         {
 
-            
+
             await _userServices.DeleteUser(id);
-            
+
             return RedirectToAction("Index", "Admin");
         }
 
@@ -52,15 +58,15 @@ namespace RealEstate.Areas.Admin.Controllers
 
             return RedirectToAction("Index", "Admin");
         }
-        
-        
+
+
         [Authorize(Policy = Constants.Policies.RequireMaster)]
         public async Task<IActionResult> Edit(string id)
         {
             var user = await _userServices.GetUser(id);
             var roles = await _roleServices.GetRoles();
 
-            var userRoles = await _signInManager.UserManager.GetRolesAsync(user);
+            var userRoles = await _userManager.GetRolesAsync(user);
 
             var roleItems = roles.Select(role =>
                 new SelectListItem(
@@ -84,10 +90,7 @@ namespace RealEstate.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(EditAdminViewModel data)
         {
-
-           var user = await _userServices.GetUser(data.Id);
-           
-
+            var user = await _userServices.GetUser(data.Id);
 
             if (user == null)
             {
@@ -96,7 +99,7 @@ namespace RealEstate.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var userRolesInDb = await _signInManager.UserManager.GetRolesAsync(user);
+                var userRolesInDb = await _userManager.GetRolesAsync(user);
 
 
                 var rolesToAdd = new List<string>();
@@ -111,8 +114,6 @@ namespace RealEstate.Areas.Admin.Controllers
                     {
                         if (assignedInDb == null)
                         {
-
-                            //await _signInManager.UserManager.AddToRoleAsync(user, role.Text);
                             //Add role
                             rolesToAdd.Add(role.Text);
 
@@ -125,20 +126,19 @@ namespace RealEstate.Areas.Admin.Controllers
                             //Remove Role
                             rolesToDelete.Add(role.Text);
 
-                            //await _signInManager.UserManager.RemoveFromRoleAsync(user, role.Text);
+
                         }
                     }
                 }
 
                 if (rolesToAdd.Any())
                 {
-                    await _signInManager.UserManager.AddToRolesAsync(user, rolesToAdd);
-
+                    await _userManager.AddToRolesAsync(user, rolesToAdd);
                 }
 
                 if (rolesToDelete.Any())
                 {
-                    await _signInManager.UserManager.RemoveFromRolesAsync(user, rolesToDelete);
+                    await _userManager.RemoveFromRolesAsync(user, rolesToDelete);
                 }
 
                 user.FirstName = data.FirstName;
@@ -151,13 +151,7 @@ namespace RealEstate.Areas.Admin.Controllers
                 }
 
                 await _userServices.UpdateUser(user);
-                
-                
-                
-
             }
-
-            //return RedirectToAction("Edit", new { id = user.Id });
             return View(data);
 
         }

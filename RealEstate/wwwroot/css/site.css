@@ -17,14 +17,12 @@ body {
   margin-bottom: 60px;
 }
 
-.btn-gear{
-   background-color: transparent;
-    border: none; /* Remove borders */
-    padding: 5px 5px; /* Some padding */
-    font-size: 16px; /* Set a font size */
-    cursor: pointer; /* Mouse pointer on hover */
-    color: inherit;
+main{
+   padding-bottom: 60px;
+   padding-top: 60px;
+  
 }
+
 .row{
     display: flex;
     justify-content: center;
@@ -36,3 +34,4 @@ body {
 .user-active{
     color: green;
 }
+

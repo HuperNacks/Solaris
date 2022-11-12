@@ -26,6 +26,8 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
 
 builder.Services.AddAuthorizationPolicies();
 builder.Services.AddScoped();
+builder.Services.ConfigureApplicationCookie(options => options.LoginPath = "/Login");
+
 builder.Services.Configure<SecurityStampValidatorOptions>(options =>
 {
     options.ValidationInterval = TimeSpan.FromMinutes(1);
