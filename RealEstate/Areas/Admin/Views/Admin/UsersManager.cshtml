@@ -10,14 +10,14 @@
     ViewData["Title"] = "Admin Manager Page ";
 }
 
-<div class="text-center">
+@*<div class="text-center">
     <h1 class="display-4">Welcome to the admin tab</h1>
-</div>
+</div>*@
 
 @model ICollection<ApplicationUser>
 
 <div class="text-center">
-    <h1 class="display-4">Users</h1>
+    @*<h1 class="display-4">Users</h1>*@
     @if (Model != null && Model.Any())
     {
         <table class="table">

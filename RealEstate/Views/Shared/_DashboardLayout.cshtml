@@ -1,6 +1,10 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using Microsoft.AspNetCore.Identity
+@using RealEstate.Core.Entities
+@using RealEstate.Infrastructure.Data
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
 @{
     Layout = "/Views/Shared/_Layout.cshtml";
 }
@@ -18,39 +22,32 @@
             </button>
         </div>
         <div class="p-4">
-            <h1><a href="index.html" class="logo">Stefanini Agency<span>Real Estate</span></a></h1>
+            <h1><a asp-area="Admin" asp-controller="Admin" asp-action="Dashboard" class="logo">Stefanini Agency<span>Real Estate</span></a></h1>
             <ul class="list-unstyled components mb-5">
                 <li class="active">
                     <a href="#"><span class="fa fa-home mr-3"></span> Home</a>
                 </li>
-                <li>
-                    <a href="#"><span class="fa fa-user mr-3"></span> About</a>
-                </li>
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <li>
+                        <a id="manage" asp-area="Identity" asp-page="/Account/Manage/Index"><span class="fa fa-user mr-3"></span>Profile</a>
+                    </li>
+                }
                 <li>
                     <a href="#"><span class="fa fa-briefcase mr-3"></span> Works</a>
                 </li>
                 <li>
-                    <a href="#"><span class="fa fa-sticky-note mr-3"></span> Blog</a>
-                </li>
-                <li>
                     <a href="#"><span class="fa fa-suitcase mr-3"></span> Gallery</a>
                 </li>
-                <li>
-                    <a href="#"><span class="fa fa-cogs mr-3"></span> Services</a>
-                </li>
-                <li>
-                    <a href="#"><span class="fa fa-paper-plane mr-3"></span> Contacts</a>
-                </li>
+                @if (User.IsInRole(Constants.Roles.Master))
+                {
+                    <li>
+                        <a asp-area="Admin" asp-controller="Admin" asp-action="UsersManager"><span class="fa fa-cogs mr-3"></span>Users Manager</a>
+                    </li>
+                }
+                
+               
             </ul>
-            <div class="mb-5">
-                <h3 class="h6 mb-3">Subscribe for newsletter</h3>
-                <form action="#" class="subscribe-form">
-                    <div class="form-group d-flex">
-                        <div class="icon"><span class="icon-paper-plane"></span></div>
-                        <input type="text" class="form-control" placeholder="Enter Email Address">
-                    </div>
-                </form>
-            </div>
             
            
         </div>

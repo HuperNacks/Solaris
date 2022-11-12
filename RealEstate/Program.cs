@@ -61,13 +61,13 @@ app.UseAuthorization();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(
-      name: "edit",
-      pattern: "Admin/{action=Index}",
+      name: "Dashboard",
+      pattern: "Admin/{action=Dashboard}",
       defaults: new {controller = "Admin" , area = "Admin"}
     );
     endpoints.MapControllerRoute(
       name: "admin",
-      pattern: "{area:exists}/{controller=Admin}/{action=Index}/{id?}"
+      pattern: "{area:exists}/{controller=Admin}/{action=UsersManager}/{id?}"
     );
     endpoints.MapControllerRoute(
     name: "default",

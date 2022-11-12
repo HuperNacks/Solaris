@@ -31,7 +31,9 @@ namespace RealEstate.Areas.Admin.Controllers
         {
             return View();
         }
-        public async Task<IActionResult> Index()
+
+        [Authorize(Policy = Constants.Policies.RequireMaster)]
+        public async Task<IActionResult> UsersManager()
         {
 
 
@@ -41,22 +43,24 @@ namespace RealEstate.Areas.Admin.Controllers
         }
 
 
-
+        [Authorize(Policy = Constants.Policies.RequireMaster)]
         public async Task<IActionResult> SoftDeleteUser(string id)
         {
 
 
             await _userServices.DeleteUser(id);
 
-            return RedirectToAction("Index", "Admin");
+            return RedirectToAction("UsersManager", "Admin");
         }
 
+
+        [Authorize(Policy = Constants.Policies.RequireMaster)]
         public async Task<IActionResult> RecoverUser(string id)
         {
             var user = await _userServices.GetUser(id);
             await _userServices.RecoverUser(user);
 
-            return RedirectToAction("Index", "Admin");
+            return RedirectToAction("UsersManager", "Admin");
         }
 
 
