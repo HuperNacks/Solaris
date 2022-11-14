@@ -9,6 +9,7 @@ namespace RealEstate.Service.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly UserManager<ApplicationUser> _userManager;
+
         public UserServices(IUserRepository userRepository, UserManager<ApplicationUser> userManager)
         {
             _userRepository = userRepository;
@@ -19,7 +20,6 @@ namespace RealEstate.Service.Services
         {
             await _userManager.UpdateSecurityStampAsync(user);
             return await _userRepository.UpdateUser(user);
-
         }
 
         public async Task<ApplicationUser> GetUser(string id)
@@ -48,6 +48,9 @@ namespace RealEstate.Service.Services
             return await _userRepository.UpdateUser(user);
         }
 
-        
+        public async Task AddUser(ApplicationUser user)
+        {
+             await _userRepository.AddUser(user);
+        } 
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using RealEstate.Areas.Admin.Models;
 using RealEstate.Core.Entities;
+using RealEstate.Service.Services;
 using RealEstate.Service.Services.Interfaces;
 using System.Data;
 
@@ -35,24 +36,51 @@ namespace RealEstate.Areas.Admin.Controllers
         [Authorize(Policy = Constants.Policies.RequireMaster)]
         public async Task<IActionResult> UsersManager()
         {
-
-
             var users = await _userServices.GetUsers();
 
             return View(users);
         }
 
+        [Authorize(Policy = Constants.Policies.RequireMaster)]
+        public async Task<IActionResult> AddUser()
+        {
+            AddUserViewModel addUserViewModel = new AddUserViewModel();
+            addUserViewModel.Id = Guid.NewGuid().ToString();
+            return View(addUserViewModel);
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddUser(AddUserViewModel addUserViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser()
+                {
+                    Id = addUserViewModel.Id,
+                    FirstName = addUserViewModel.FirstName,
+                    LastName = addUserViewModel.LastName,
+                    Email = addUserViewModel.Email,
+                    NormalizedEmail = addUserViewModel.Email.ToUpper(),
+                    UserName = addUserViewModel.Email,
+                    NormalizedUserName = addUserViewModel.Email.ToUpper()
+
+                };
+                PasswordHasher<ApplicationUser> passwordHasher = new PasswordHasher<ApplicationUser>();
+                user.PasswordHash = passwordHasher.HashPassword(user, addUserViewModel.Password);
+
+                await _userServices.AddUser(user);
+
+            }
+
+            return RedirectToAction(nameof(UsersManager));
+        }
 
         [Authorize(Policy = Constants.Policies.RequireMaster)]
         public async Task<IActionResult> SoftDeleteUser(string id)
         {
-
-
             await _userServices.DeleteUser(id);
 
-            return RedirectToAction("UsersManager", "Admin");
+            return RedirectToAction(nameof(UsersManager));
         }
-
 
         [Authorize(Policy = Constants.Policies.RequireMaster)]
         public async Task<IActionResult> RecoverUser(string id)
@@ -60,9 +88,8 @@ namespace RealEstate.Areas.Admin.Controllers
             var user = await _userServices.GetUser(id);
             await _userServices.RecoverUser(user);
 
-            return RedirectToAction("UsersManager", "Admin");
+            return RedirectToAction(nameof(UsersManager));
         }
-
 
         [Authorize(Policy = Constants.Policies.RequireMaster)]
         public async Task<IActionResult> Edit(string id)
@@ -77,7 +104,6 @@ namespace RealEstate.Areas.Admin.Controllers
                     role.Name,
                     role.Id,
                     userRoles.Any(ur => ur.Contains(role.Name)))).ToList();
-
 
             var userModel = new EditAdminViewModel
             {
@@ -105,7 +131,6 @@ namespace RealEstate.Areas.Admin.Controllers
             {
                 var userRolesInDb = await _userManager.GetRolesAsync(user);
 
-
                 var rolesToAdd = new List<string>();
                 var rolesToDelete = new List<string>();
 
@@ -117,20 +142,15 @@ namespace RealEstate.Areas.Admin.Controllers
                     if (role.Selected)
                     {
                         if (assignedInDb == null)
-                        {
-                            //Add role
+                        {  
                             rolesToAdd.Add(role.Text);
-
                         }
                     }
                     else
                     {
                         if (assignedInDb != null)
-                        {
-                            //Remove Role
+                        {         
                             rolesToDelete.Add(role.Text);
-
-
                         }
                     }
                 }
@@ -153,11 +173,10 @@ namespace RealEstate.Areas.Admin.Controllers
                 {
                     user.PasswordHash = passwordHasher.HashPassword(user, data.Password);
                 }
-
                 await _userServices.UpdateUser(user);
             }
-            return View(data);
 
+            return View(data);
         }
     }
 }

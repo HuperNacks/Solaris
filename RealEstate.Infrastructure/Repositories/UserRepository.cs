@@ -9,9 +9,10 @@ namespace RealEstate.Infrastructure.Repositories
     public class UserRepository : IUserRepository
     {
         private readonly ApplicationDbContext _context;
+
         public UserRepository(ApplicationDbContext context)
         {
-            _context = context;
+            _context = context;   
         }
 
         public async Task<ApplicationUser> GetUser(string id)
@@ -32,7 +33,11 @@ namespace RealEstate.Infrastructure.Repositories
             return user;
         }
 
+        public async Task AddUser(ApplicationUser user)
+        {
+            await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
+        }
 
-     
     }
 }

@@ -7,12 +7,14 @@ namespace RealEstate.Service.Services.Interfaces
         Task<ApplicationUser> GetUser(string id);
 
         Task<ICollection<ApplicationUser>> GetUsers();
+
         Task<ApplicationUser> UpdateUser(ApplicationUser user);
 
         Task<ApplicationUser> DeleteUser(string id);
 
         Task<ApplicationUser> RecoverUser(ApplicationUser user);
-       
+
+        Task AddUser(ApplicationUser user);
 
 
     }

@@ -12,6 +12,6 @@ namespace RealEstate.Core.Interfaces
 
         Task<ApplicationUser> UpdateUser(ApplicationUser user);
 
-
+        Task AddUser(ApplicationUser user);
     }
 }
